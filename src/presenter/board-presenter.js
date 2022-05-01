@@ -7,7 +7,6 @@ export default class BoardPresenter {
   tasklistComponent = new TaskListTemplateView();
   taskEventComponent = new TaskEventTemplateView();
 
-
   init = (listContainer) => {
     this.listContainer = listContainer;
 
@@ -15,9 +14,8 @@ export default class BoardPresenter {
     render(this.taskEventComponent, this.tasklistComponent.getElement());
     render(new TaskEditTemplateView(), this.tasklistComponent.getElement());
 
-
     for (let i = 0; i < 3; i++) {
       render(this.taskEventComponent, this.taskListComponent.getElement());
-    }
+    } // вот тут не отрабатывает
   };
 }
