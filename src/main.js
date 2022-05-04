@@ -12,6 +12,7 @@ const boardPresenter = new BoardPresenter();
 
 
 render(new TripInfoTemplateView(), siteTripMainElement, RenderPosition.AFTERBEGIN);
-render(new ListSortTemplateView(), siteTripEventsElement);
 render(new ListTaskFilterView(), siteTripControlsElement);
+render(new ListSortTemplateView(), siteTripEventsElement);
+
 boardPresenter.init(siteTripEventsElement);
