@@ -1,10 +1,10 @@
 import {createElement} from '../render.js';
-import {humanizeTaskDueDate} from '../utils.js';
+import {humanizeTaskdateFrom} from '../utils.js';
 
 const createTaskTemplate = (task) => {
-  const {dueDateFrom} = task;
+  const {dateFrom} = task;
 
-  const date = dueDateFrom !== null ? humanizeTaskDueDate(dueDateFrom) : '';
+  const date = dateFrom !== null ? humanizeTaskdateFrom(dateFrom) : '';
 
   return (
     `<li class="trip-events__item">

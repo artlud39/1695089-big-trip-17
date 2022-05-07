@@ -18,12 +18,31 @@ const generateType = () => {
   return types[randomIndex];
 };
 
+const generateName= () => {
+  const names = [
+    'Berlin',
+    'Amsterdam',
+    'London',
+    'Paris',
+    'Madrid',
+    'Oslo',
+    'Budapest',
+    'Rome',
+    'Zurich',
+  ];
+
+  const randomIndex = getRandomInteger(0, names.length - 1);
+
+  return names[randomIndex];
+};
+
 export const generateTask = () => ({
   type: generateType(),
-  dueDateFrom: null,
-  dueDateTo: null,
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
   price: 1100,
   isFavorite: false,
-  destination: null,
-  offers: null,
+  destination: '',
+  offers: [],
+  id: 1,
 });

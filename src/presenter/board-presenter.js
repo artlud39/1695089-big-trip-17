@@ -11,7 +11,7 @@ export default class BoardPresenter {
     this.listContainer = listContainer;
     this.tasksModel = tasksModel;
     this.boardTasks = [...this.tasksModel.getTasks()];
-
+    console.log(this.boardTasks);
     render(this.taskListComponent, this.listContainer);
     render(this.taskEventComponent, this.taskListComponent.getElement());
     render(new TaskEditTemplateView(), this.taskListComponent.getElement());
