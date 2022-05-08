@@ -1,48 +1,23 @@
 import {getRandomInteger} from '../utils.js';
+import {generateType} from './type.js';
+import dayjs from 'dayjs';
 
-const generateType = () => {
-  const types = [
-    'taxi',
-    'bus',
-    'train',
-    'ship',
-    'drive',
-    'flight',
-    'check-in',
-    'sightseeing',
-    'restaurant',
-  ];
+const generateDate = (dayBegin, dayEnd) => {
+  const daysGap = getRandomInteger(dayBegin, dayEnd);
+  const hoursGap = getRandomInteger(0, 24);
+  const minutesGap = getRandomInteger(0, 60);
+  const secondsGap = getRandomInteger(0, 60);
 
-  const randomIndex = getRandomInteger(0, types.length - 1);
-
-  return types[randomIndex];
-};
-
-const generateName= () => {
-  const names = [
-    'Berlin',
-    'Amsterdam',
-    'London',
-    'Paris',
-    'Madrid',
-    'Oslo',
-    'Budapest',
-    'Rome',
-    'Zurich',
-  ];
-
-  const randomIndex = getRandomInteger(0, names.length - 1);
-
-  return names[randomIndex];
+  return dayjs().add(daysGap, 'day').add(hoursGap, 'hour').add(minutesGap, 'minute').add(secondsGap, 'second').toDate();
 };
 
 export const generateTask = () => ({
   type: generateType(),
-  dateFrom: '2019-07-10T22:55:56.845Z',
-  dateTo: '2019-07-11T11:22:13.375Z',
-  price: 1100,
-  isFavorite: false,
-  destination: '',
+  dateFrom: generateDate(0,3),
+  dateTo: generateDate(3,5),
+  price: getRandomInteger(200,1500),
+  isFavorite: Boolean(getRandomInteger(0,1)),
+  destination: {},
   offers: [],
-  id: 1,
+  id: getRandomInteger(1,10),
 });

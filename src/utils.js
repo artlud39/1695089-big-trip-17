@@ -9,6 +9,12 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const humanizeTaskdateFrom = (dateFrom) => dayjs(dateFrom).format('D MMMM');
 
-export {getRandomInteger, humanizeTaskdateFrom};
+const humanizeTaskdate = (date) => dayjs(date).format('MMM D');
+const yearMonthDayDate = (date) => dayjs(date).format('YYYY-MM-DD');
+const hoursMinutesDate = (date) => dayjs(date).format('hh:mm');
+const fullDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
+
+const editFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+
+export {getRandomInteger, humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, editFullDate};
