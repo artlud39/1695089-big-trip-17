@@ -14,16 +14,26 @@ const description = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-export const destination = [
-  {
-    description: description[getRandomInteger(0, description.length - 1)],
-    name: generateName(),
-    pictures: [
-      {
-        src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
-        description: description[getRandomInteger(0, description.length - 1)],
-      }
-    ]
-  }
-];
+export const generateRandomDestination = () => ({
+  description: description[getRandomInteger(0, description.length - 1)],
+  name: generateName(),
+  pictures: [
+    {
+      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
+      description: description[getRandomInteger(0, description.length - 1)],
+    },
+    {
+      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
+      description: description[getRandomInteger(0, description.length - 1)],
+    },
+    {
+      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
+      description: description[getRandomInteger(0, description.length - 1)],
+    },
+    {
+      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
+      description: description[getRandomInteger(0, description.length - 1)],
+    },
+  ]
+});
 

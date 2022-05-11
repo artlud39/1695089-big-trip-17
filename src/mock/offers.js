@@ -1,6 +1,6 @@
 import {getRandomInteger} from '../utils.js';
 
-export const offers = [
+export const offersType = [
   {
     type: 'Taxi',
     offers: [

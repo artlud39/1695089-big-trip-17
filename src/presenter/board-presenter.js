@@ -7,16 +7,18 @@ export default class BoardPresenter {
   taskListComponent = new TaskListTemplateView();
   taskEventComponent = new TaskEventTemplateView();
 
-  init = (listContainer,tasksModel) => {
+  init = (listContainer,pointsModel) => {
     this.listContainer = listContainer;
-    this.tasksModel = tasksModel;
-    this.boardTasks = [...this.tasksModel.getTasks()];
+    this.pointsModel = pointsModel;
+    this.boardPoints = [...this.pointsModel.getPoints()];
+
+    console.log(this.boardPoints);
 
     render(this.taskListComponent, this.listContainer);
-    render(new TaskEditTemplateView(), this.taskListComponent.getElement());
+    render(new TaskEditTemplateView(this.boardPoints[0]), this.taskListComponent.getElement());
 
-    for (let i = 0; i < this.boardTasks.length; i++) {
-      render(new TaskEventTemplateView(this.boardTasks[i]), this.taskListComponent.getElement());
+    for (let i = 0; i < this.boardPoints.length; i++) {
+      render(new TaskEventTemplateView(this.boardPoints[i]), this.taskListComponent.getElement());
     }
   };
 }
