@@ -10,9 +10,8 @@ export default class BoardPresenter {
   init = (listContainer,pointsModel) => {
     this.listContainer = listContainer;
     this.pointsModel = pointsModel;
-    this.boardPoints = [...this.pointsModel.getPoints()];
 
-    console.log(this.boardPoints);
+    this.boardPoints = [...this.pointsModel.getPoints()];
 
     render(this.taskListComponent, this.listContainer);
     render(new TaskEditTemplateView(this.boardPoints[0]), this.taskListComponent.getElement());

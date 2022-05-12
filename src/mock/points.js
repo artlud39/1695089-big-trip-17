@@ -1,6 +1,7 @@
 import {getRandomInteger} from '../utils.js';
 import {generateType} from './type.js';
 import {generateRandomDestination} from './destination.js';
+import {offersType} from './offers.js';
 import dayjs from 'dayjs';
 
 const generateDate = (dayStart, dayEnd) => {
@@ -19,6 +20,6 @@ export const generatePoints = () => ({
   price: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),
   destination: generateRandomDestination(),
-  offers: ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'],
-  id: getRandomInteger(1,10),
+  offers: offersType,
+  id: [getRandomInteger(1,5), getRandomInteger(1,5),]
 });

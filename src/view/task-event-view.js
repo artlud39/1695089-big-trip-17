@@ -1,22 +1,39 @@
 import {createElement} from '../render.js';
 import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate} from '../utils.js';
 
-const createTaskTemplate = (task) => {
-  const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = task;
+const createTaskTemplate = (point) => {
+  const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
 
   const dateFromHumanize = dateFrom !== null ? humanizeTaskdate(dateFrom): '';
-  const dateFromyearMonthDayDate = dateFrom !== null ? yearMonthDayDate(dateFrom): '';
+  const dateFromYearMonthDayDate = dateFrom !== null ? yearMonthDayDate(dateFrom): '';
   const dateStartHoursMinutes = dateFrom !== null ? hoursMinutesDate(dateFrom): '';
   const dateEndHoursMinutes = dateTo !== null ? hoursMinutesDate(dateTo): '';
   const fullDateStart = dateFrom !== null ? fullDate(dateFrom): '';
   const fullDateEnd = dateTo !== null ? fullDate(dateTo): '';
 
-  const isTaskFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
+  const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
+
+  const pointTypeOffer = offers.find((offer) => offer.type === point.type);
+
+  const createEditOffersTemplate = (typeOffer) => typeOffer.offers
+    .map((offer) => {
+      const checked = point.id.includes(offer.id) ? 'checked' : '';
+      if(checked) {
+        return `
+        <li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </li>`;
+      }
+    }).join(' ');
+
+  const offersTemplate = createEditOffersTemplate(pointTypeOffer);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${dateFromyearMonthDayDate}">${dateFromHumanize}</time>
+        <time class="event__date" datetime="${dateFromYearMonthDayDate}">${dateFromHumanize}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
@@ -34,13 +51,9 @@ const createTaskTemplate = (task) => {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Rent a car</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">200</span>
-          </li>
+            ${offersTemplate}
         </ul>
-        <button class="event__favorite-btn  ${isTaskFavorite}" type="button">
+        <button class="event__favorite-btn  ${isPointFavorite}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
             <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -55,12 +68,12 @@ const createTaskTemplate = (task) => {
 };
 
 export default class TaskEventTemplateView {
-  constructor(task) {
-    this.task = task;
+  constructor(point) {
+    this.point = point;
   }
 
   getTemplate() {
-    return createTaskTemplate(this.task);
+    return createTaskTemplate(this.point);
   }
 
   getElement() {

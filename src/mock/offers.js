@@ -5,17 +5,20 @@ export const offersType = [
     type: 'Taxi',
     offers: [
       {
-        id: 'business',
+        prefix: 'business',
         title: 'Upgrade to a business class',
         price: getRandomInteger(20,150),
+        id: 1,
       }, {
-        id: 'radio',
+        prefix: 'radio',
         title: 'Choose the radio station',
         price: getRandomInteger(10,20),
+        id: 2,
       }, {
-        id: 'uber',
+        prefix: 'uber',
         title: 'Order Uber',
         price: getRandomInteger(20,50),
+        id: 3,
       }
     ]
   },
@@ -23,17 +26,20 @@ export const offersType = [
     type: 'Bus',
     offers: [
       {
-        id: 'luggage',
+        prefix: 'luggage',
         title: 'Add luggage',
         price: getRandomInteger(10,100),
+        id: 1,
       },{
-        id: 'meal',
+        prefix: 'meal',
         title: 'Add meal',
         price: getRandomInteger(10,100),
+        id: 2,
       }, {
-        id: 'seats',
+        prefix: 'seats',
         title: 'Choose seats',
         price: getRandomInteger(10,100),
+        id: 3,
       }
     ]
   },
@@ -41,21 +47,25 @@ export const offersType = [
     type: 'Train',
     offers: [
       {
-        id: 'luggage',
+        prefix: 'luggage',
         title: 'Add luggage',
         price: getRandomInteger(10,100),
+        id: 1,
       }, {
-        id: 'meal',
+        prefix: 'meal',
         title: 'Add meal',
         price: getRandomInteger(10,100),
+        id: 2,
       }, {
-        id: 'seats',
+        prefix: 'seats',
         title: 'Choose seats',
         price: getRandomInteger(10,100),
+        id: 3,
       }, {
-        id: 'comfort',
+        prefix: 'comfort',
         title: 'Switch to comfort class',
         price: getRandomInteger(10,100),
+        id: 4,
       }
     ]
   },
@@ -63,17 +73,20 @@ export const offersType = [
     type: 'Ship',
     offers: [
       {
-        id: 'car',
+        prefix: 'car',
         title: 'Add car place',
         price: getRandomInteger(10,100),
+        id: 1,
       }, {
-        id: 'meal',
+        prefix: 'meal',
         title: 'Add meal',
         price: getRandomInteger(10,100),
+        id: 2,
       }, {
-        id: 'comfort',
+        prefix: 'comfort',
         title: 'Switch to comfort class',
         price: getRandomInteger(10,100),
+        id: 3,
       }
     ]
   },
@@ -81,14 +94,16 @@ export const offersType = [
     type: 'Drive',
     offers: [
       {
-        id: 'transponder',
+        prefix: 'transponder',
         title: 'Toll road transponder',
         price: getRandomInteger(10,50),
+        id: 1,
       },
       {
-        id: 'car',
+        prefix: 'car',
         title: 'Rent a car',
         price: getRandomInteger(150,250),
+        id: 2,
       },
     ]
   },
@@ -96,25 +111,30 @@ export const offersType = [
     type: 'Flight',
     offers: [
       {
-        id: 'luggage',
+        prefix: 'luggage',
         title: 'Add luggage',
         price: getRandomInteger(25,35),
+        id: 1,
       }, {
-        id: 'comfort',
+        prefix: 'comfort',
         title: 'Switch to comfort class',
         price: getRandomInteger(30,80),
+        id: 2,
       }, {
-        id: 'meal',
+        prefix: 'meal',
         title: 'Add meal',
         price: getRandomInteger(15,30),
+        id: 3,
       }, {
-        id: 'seats',
+        prefix: 'seats',
         title: 'Choose seats',
         price: getRandomInteger(5,10),
+        id: 4,
       }, {
-        id: 'train',
+        prefix: 'train',
         title: 'Travel by train',
         price: getRandomInteger(10,40),
+        id: 5,
       }
     ]
   },
@@ -122,17 +142,20 @@ export const offersType = [
     type: 'Check-in',
     offers: [
       {
-        id: 'breakfast',
+        prefix: 'breakfast',
         title: 'Add breakfast',
         price: getRandomInteger(10,100),
+        id: 1,
       }, {
-        id: 'lunch',
+        prefix: 'lunch',
         title: 'Add lunch',
         price: getRandomInteger(10,100),
+        id: 2,
       }, {
-        id: 'dinner',
+        prefix: 'dinner',
         title: 'Add dinner',
         price: getRandomInteger(10,100),
+        id: 3,
       },
     ]
   },
@@ -140,13 +163,15 @@ export const offersType = [
     type: 'Sightseeing',
     offers: [
       {
-        id: 'tickets',
+        prefix: 'tickets',
         title: 'Book tickets',
         price: getRandomInteger(40,60),
+        id: 1,
       }, {
-        id: 'lunch',
+        prefix: 'lunch',
         title: 'Lunch in city',
         price: getRandomInteger(30,50),
+        id: 2,
       },
     ]
   },
@@ -154,9 +179,10 @@ export const offersType = [
     type: 'Restaurant',
     offers: [
       {
-        id: 'book',
+        prefix: 'book',
         title: 'Book a table',
         price: getRandomInteger(50,100),
+        id: 1,
       }
     ]
   }

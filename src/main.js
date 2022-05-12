@@ -5,6 +5,7 @@ import {render,RenderPosition} from './render.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/points-model.js';
 
+
 const siteTripMainElement = document.querySelector('.trip-main');
 const siteTripControlsElement = siteTripMainElement.querySelector('.trip-controls__filters');
 const sitePageMainElement = document.querySelector('.page-main');

@@ -1,6 +1,5 @@
 import {createElement} from '../render.js';
 import {editFullDate} from '../utils.js';
-import {offersType} from '../mock/offers.js';
 import {NAMES} from '../const.js';
 
 const createPhotosTemplate = (destinationPhotos) => (
@@ -23,29 +22,28 @@ const createTaskEditTemplate = (point = {}) => {
     offers = [],
   } = point;
 
-  // const pointTypeOffer = offers.find((offersType) => offerType.type === point.type);
+  const pointTypeOffer = offers.find((offer) => offer.type === point.type);
 
-
-  // pointTypeOffer.offers
-  //   .map((offer) => {
-  //     const checked = point.offers.includes(offer.type) ? 'checked' : '';
-  //     return `
-  //     <div class="event__offer-selector">
-  //       <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${offer.id}" ${checked}>
-  //       <label class="event__offer-label" for="event-offer-luggage-1">
-  //         <span class="event__offer-title">${offer.title}</span>
-  //         &plus;&euro;&nbsp;
-  //         <span class="event__offer-price">${offer.price}</span>
-  //       </label>
-  //     </div>`;
-  //   });
+  const createEditOffersTemplate = (typeOffer) => typeOffer.offers
+    .map((offer) => {
+      const checked = point.id.includes(offer.id) ? 'checked' : '';
+      return `
+      <div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.prefix}-1" type="checkbox" name="event-offer-${offer.prefix}" ${checked}>
+        <label class="event__offer-label" for="event-offer-${offer.prefix}-1">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`;
+    }).join(' ');
 
   const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): 'From';
   const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): 'To';
 
   const photosTemplate = createPhotosTemplate(destination.pictures);
   const nameTemplate = createNamesTemplate(NAMES);
-
+  const offersTemplate = createEditOffersTemplate(pointTypeOffer);
 
   return (
     `<li class="trip-events__item">
@@ -145,52 +143,8 @@ const createTaskEditTemplate = (point = {}) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
         <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">50</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">80</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-            <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">Add meal</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">15</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-            <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">Choose seats</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">5</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-            <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">Travel by train</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">40</span>
-            </label>
-          </div>
+        ${offersTemplate}
         </div>
       </section>
 
@@ -205,18 +159,17 @@ const createTaskEditTemplate = (point = {}) => {
       </section>
     </section>
   </form>
-</li>`
+  </li>`
   );
 };
 
-
 export default class TaskEditTemplateView {
-  constructor (task) {
-    this.task = task;
+  constructor (point) {
+    this.point = point;
   }
 
   getTemplate() {
-    return createTaskEditTemplate(this.task);
+    return createTaskEditTemplate(this.point);
   }
 
   getElement() {
