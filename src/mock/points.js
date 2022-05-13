@@ -15,7 +15,7 @@ const generateDate = (dayStart, dayEnd) => {
 
 export const generatePoints = () => ({
   type: generateType(),
-  dateFrom: generateDate(0,3),
+  dateFrom: generateDate(0,2),
   dateTo: generateDate(3,5),
   price: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),

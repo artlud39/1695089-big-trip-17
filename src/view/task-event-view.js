@@ -1,5 +1,5 @@
 import {createElement} from '../render.js';
-import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate} from '../utils.js';
+import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils.js';
 
 const createTaskTemplate = (point) => {
   const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
@@ -10,6 +10,7 @@ const createTaskTemplate = (point) => {
   const dateEndHoursMinutes = dateTo !== null ? hoursMinutesDate(dateTo): '';
   const fullDateStart = dateFrom !== null ? fullDate(dateFrom): '';
   const fullDateEnd = dateTo !== null ? fullDate(dateTo): '';
+  const durationTripDate = getDurationTripDate(dateFrom,dateTo);
 
   const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
 
@@ -44,7 +45,7 @@ const createTaskTemplate = (point) => {
             &mdash;
             <time class="event__end-time" datetime="${fullDateEnd}">${dateEndHoursMinutes}</time>
           </p>
-          <p class="event__duration">01H 35M</p>
+          <p class="event__duration">${durationTripDate}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>

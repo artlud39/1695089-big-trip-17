@@ -9,7 +9,6 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-
 const humanizeTaskdate = (date) => dayjs(date).format('MMM D');
 const yearMonthDayDate = (date) => dayjs(date).format('YYYY-MM-DD');
 const hoursMinutesDate = (date) => dayjs(date).format('hh:mm');
@@ -17,4 +16,13 @@ const fullDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
 
 const editFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
-export {getRandomInteger, humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, editFullDate};
+const getDurationTripDate = (dayStart, dayEnd) => {
+  const date1 = dayjs(dayStart);
+  const date2 = dayjs(dayEnd);
+  let minutes = date2.diff(date1, 'minutes');
+  const hours = Math.floor(minutes/60);
+  minutes = minutes - (hours * 60);
+  return `${hours}H ${minutes}M`;
+};
+
+export {getRandomInteger, humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, editFullDate, getDurationTripDate};
