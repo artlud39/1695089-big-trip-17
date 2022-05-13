@@ -17,7 +17,6 @@ const createTaskEditTemplate = (point = {}) => {
     dateFrom = null,
     dateTo = null,
     price = 0,
-    isFavorite = false,
     destination = {},
     offers = [],
   } = point;
