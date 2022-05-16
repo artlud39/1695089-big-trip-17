@@ -63,7 +63,7 @@ export default class BoardPresenter {
   };
 
   #renderBoard = () => {
-    if(this.#boardPoints.every((point) => point.isArchive)){
+    if(this.#boardPoints.every((point) => point === {})){
       render(new NoPointTemplateView(), this.#listContainer);
     } else {
       render(new ListSortTemplateView(), this.#listContainer);
