@@ -82,7 +82,7 @@ export default class TaskEventTemplateView extends AbstractView {
 
   setEditClickHandler = (callback) => {
     this._callback.editClick = callback;
-    this.element.querySelector('.card__btn--edit').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 
   #editClickHandler = (evt) => {
