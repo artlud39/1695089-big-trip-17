@@ -1,6 +1,6 @@
 import ListTaskFilterView from './view/list-filter-view';
 import TripInfoTemplateView from './view/trip-info-view';
-import {render,RenderPosition} from './render.js';
+import {render, RenderPosition} from './framework/render.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import PointsModel from './model/points-model.js';
 

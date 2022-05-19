@@ -3,7 +3,7 @@ import TaskEventTemplateView from '../view/task-event-view.js';
 import TaskEditTemplateView from '../view/task-edit-view.js';
 import NoPointTemplateView from '../view/no-point-view.js';
 import ListSortTemplateView from '../view/list-sort-view';
-import {render} from '../render.js';
+import {render, replace} from '../framework/render.js';
 
 export default class BoardPresenter {
   #listContainer = null;
@@ -29,11 +29,12 @@ export default class BoardPresenter {
     const pointEditComponent = new TaskEditTemplateView(point);
 
     const replacePointToForm = () => {
-      this.#pointListComponent.element.replaceChild(pointEditComponent.element,pointComponent.element);
+      replace(pointEditComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
       this.#pointListComponent.element.replaceChild(pointComponent.element,pointEditComponent.element);
+      replace(pointComponent, pointEditComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -44,18 +45,17 @@ export default class BoardPresenter {
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replacePointToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('.event--edit').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointEditComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointEditComponent.setEditClickHandler(() => {
       replaceFormToPoint();
     });
 

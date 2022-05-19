@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
 
 const createTaskTemplate = (point) => {
   const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
@@ -68,11 +68,11 @@ const createTaskTemplate = (point) => {
   );
 };
 
-export default class TaskEventTemplateView {
+export default class TaskEventTemplateView extends AbstractView {
   #point = null;
-  #element = null;
 
   constructor(point) {
+    super();
     this.#point = point;
   }
 
@@ -80,14 +80,13 @@ export default class TaskEventTemplateView {
     return createTaskTemplate(this.#point);
   }
 
-  get element() {
-    if(!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }
