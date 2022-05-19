@@ -39,6 +39,9 @@ const getFullWayCities = (points) => {
     :`${[...uniqueVisitedCities].join(' &mdash; ')}`;
 };
 
+const isFuturePoints = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');
+const isPastPoints = (dateTo) => dateTo && dayjs().isAfter(dateTo, 'D');
+
 export {
   humanizeTaskdate,
   yearMonthDayDate,
@@ -48,4 +51,6 @@ export {
   getDurationTripDate,
   getPeriodTripDayMonth,
   getFullWayCities,
+  isFuturePoints,
+  isPastPoints,
 };

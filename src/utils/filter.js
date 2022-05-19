@@ -1,10 +1,10 @@
 import {FILTER_TYPE} from '../const';
-import {isTaskExpired,} from './task';
+import {isFuturePoints, isPastPoints} from './point';
 
 const filter = {
-  [FILTER_TYPE.ALL]: (tasks) => tasks.filter((task) => !task.isArchive),
-  [FILTER_TYPE.OVERDUE]: (tasks) => tasks.filter((task) => isTaskExpired(task.dueDate) && !task.isArchive),
-  [FILTER_TYPE.TODAY]: (tasks) => tasks.filter((task) => isTaskExpiringToday(task.dueDate) && !task.isArchive),
+  [FILTER_TYPE.EVERYTHING]: (points) => points,
+  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => isFuturePoints(point.dateFrom)),
+  [FILTER_TYPE.PAST]: (points) => points.filter((point) => isPastPoints(point.dateTo)),
 };
 
 export {filter};
