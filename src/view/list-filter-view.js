@@ -2,6 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 const createNewItemFilterTemplate = (filter, isChecked) => {
   const {name, count} = filter;
+
   return (
     `<div class="trip-filters__filter">
         <input id="filter-${name}"
@@ -18,7 +19,7 @@ const createNewItemFilterTemplate = (filter, isChecked) => {
   );
 };
 
-const createNewTaskFilterTemplate = (filterItems) => {
+const createNewPointFilterTemplate = (filterItems) => {
   const filterItemsTemplate = filterItems
     .map((filter,index)=> createNewItemFilterTemplate(filter,index === 0))
     .join('');
@@ -30,15 +31,15 @@ const createNewTaskFilterTemplate = (filterItems) => {
     </form>`
   );
 };
-export default class ListTaskFilterView extends AbstractView {
-  #filter = null;
+export default class ListPointFilterView extends AbstractView {
+  #filters = null;
 
-  constructor(filter) {
+  constructor(filters) {
     super();
-    this.#filter = filter;
+    this.#filters = filters;
   }
 
   get template() {
-    return createNewTaskFilterTemplate(this.#filter);
+    return createNewPointFilterTemplate(this.#filters);
   }
 }
