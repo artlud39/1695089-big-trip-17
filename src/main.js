@@ -4,11 +4,12 @@ import PointsModel from './model/points-model.js';
 
 const siteTripMainElement = document.querySelector('.trip-main');
 const siteTripControlsElement = siteTripMainElement.querySelector('.trip-controls__filters');
-const sitePageMainElement = document.querySelector('.page-main');
-const siteTripEventsElement = sitePageMainElement.querySelector('.trip-events');
+
+const sitePageMainElement = document.querySelector('.page-body__page-main');
+const siteTripEventsElement = sitePageMainElement.querySelector('.page-body__container');
 
 const pointsModel = new PointsModel();
-const tripInfoPresenter = new TripInfoPresenter(siteTripMainElement,siteTripControlsElement, pointsModel);
+const tripInfoPresenter = new TripInfoPresenter(siteTripMainElement, siteTripControlsElement, pointsModel);
 const boardPresenter = new BoardPresenter(siteTripEventsElement,pointsModel);
 
 

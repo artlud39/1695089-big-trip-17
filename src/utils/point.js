@@ -42,6 +42,17 @@ const getFullWayCities = (points) => {
 const isFuturePoints = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');
 const isPastPoints = (dateTo) => dateTo && dayjs().isAfter(dateTo, 'D');
 
+
+const sortPointTime = (pointA, pointB) => {
+  const durationDateA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationDateB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return durationDateB - durationDateA;
+};
+
+const sortPointPrice = (pointA, pointB) => pointB.price - pointA.price;
+
+
 export {
   humanizeTaskdate,
   yearMonthDayDate,
@@ -53,4 +64,6 @@ export {
   getFullWayCities,
   isFuturePoints,
   isPastPoints,
+  sortPointTime,
+  sortPointPrice,
 };
