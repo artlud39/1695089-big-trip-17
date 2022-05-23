@@ -3,6 +3,7 @@ import {generateType} from './type.js';
 import {generateRandomDestination} from './destination.js';
 import {offersType} from './offers.js';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 
 const generateDate = (dayStart, dayEnd) => {
   const daysGap = getRandomInteger(dayStart, dayEnd);
@@ -21,5 +22,5 @@ export const generatePoints = () => ({
   isFavorite: Boolean(getRandomInteger(0,1)),
   destination: generateRandomDestination(),
   offers: offersType,
-  id: [getRandomInteger(1,5), getRandomInteger(1,5),]
+  id: nanoid(),
 });
