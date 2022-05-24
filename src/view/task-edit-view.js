@@ -1,14 +1,15 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-view.js';
 import {editFullDate} from '../utils/point.js';
 import {NAMES} from '../const.js';
+import {offersType} from '../mock/offers.js';
 
 const BLANK_POINT = {
   type: '',
   dateFrom: null,
   dateTo: null,
   price: 0,
-  destination: {},
-  offers: [],
+  destination: null,
+  offers: null,
 };
 
 const createPhotosTemplate = (destinationPhotos) => (
@@ -21,14 +22,7 @@ const createNamesTemplate = (destinations) => (
 );
 
 const createTaskEditTemplate = (point = {}) => {
-  const {
-    type = '',
-    dateFrom = null,
-    dateTo = null,
-    price = 0,
-    destination = {},
-    offers = [],
-  } = point;
+  const {type, dateFrom, dateTo, price, destination, offers} = point;
 
   const pointTypeOffer = offers.find((offer) => offer.type === point.type);
 
@@ -49,12 +43,11 @@ const createTaskEditTemplate = (point = {}) => {
   const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): 'From';
   const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): 'To';
 
-  const photosTemplate = createPhotosTemplate(destination.pictures);
+  const photosTemplate = destination.description ? createPhotosTemplate(destination.pictures): '';
   const nameTemplate = createNamesTemplate(NAMES);
   const offersTemplate = createEditOffersTemplate(pointTypeOffer);
 
-  return (
-    `<li class="trip-events__item">
+  return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -167,20 +160,20 @@ const createTaskEditTemplate = (point = {}) => {
       </section>
     </section>
   </form>
-  </li>`
-  );
+  </li>`;
 };
 
-export default class TaskEditTemplateView extends AbstractView {
-  #point = null;
-
+export default class TaskEditTemplateView extends AbstractStatefulView {
   constructor (point = BLANK_POINT) {
     super();
-    this.#point = point;
+    this._state = TaskEditTemplateView.parsePointToState(point);
+
+    this.#setInnerHandlers();
+
   }
 
   get template() {
-    return createTaskEditTemplate(this.#point);
+    return createTaskEditTemplate(this._state);
   }
 
   setEditClickHandler = (callback) => {
@@ -200,8 +193,39 @@ export default class TaskEditTemplateView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#point);
+    this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
   };
 
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  };
 
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-list').addEventListener('click', this.#typeToggleHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
+  };
+
+  #typeToggleHandler = (evt) => {
+    evt.preventDefault();
+    const targetPoint = offersType.find((item) => item.type === evt.target.value);
+    this.updateElement({
+      type: targetPoint.type,
+      offers: targetPoint.offers
+    });
+  };
+
+  #destinationToggleHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: this._state.destination,
+    });
+  };
+
+  static parsePointToState = (point) => ({...point});
+
+  static parseStateToPoint = (state) => {
+    const point = {...state};
+    return point;
+  };
 }
