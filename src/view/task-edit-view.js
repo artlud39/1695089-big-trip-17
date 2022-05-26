@@ -3,6 +3,7 @@ import {editFullDate} from '../utils/point.js';
 import {NAMES} from '../const.js';
 import {offersType} from '../mock/offers.js';
 
+
 const BLANK_POINT = {
   type: '',
   dateFrom: null,
@@ -13,16 +14,17 @@ const BLANK_POINT = {
 };
 
 const createPhotosTemplate = (destinationPhotos) => (
-  `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}`
+  `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}`
 );
 
-
-const createNamesTemplate = (destinations) => (
-  destinations.map((destination) => `<option value="${destination}"></option>`).join(' ')
-);
+const createNamesTemplate = (destinations) => destinations.map((destination) => `<option value="${destination}"></option>`).join('');
 
 const createTaskEditTemplate = (point = {}) => {
   const {type, dateFrom, dateTo, price, destination, offers} = point;
+
+  const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): 'From';
+  const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): 'To';
+  const nameTemplate = createNamesTemplate(NAMES);
 
   const pointTypeOffer = offers.find((offer) => offer.type === point.type);
 
@@ -40,12 +42,30 @@ const createTaskEditTemplate = (point = {}) => {
       </div>`;
     }).join(' ');
 
-  const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): 'From';
-  const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): 'To';
+  const createOffersTemplateSection = (offersTemplate) => offersTemplate.offers.length !== 0 ? (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+      ${createEditOffersTemplate(offersTemplate)}
+      </div>
+    </section>`): '';
 
-  const photosTemplate = destination.description ? createPhotosTemplate(destination.pictures): '';
-  const nameTemplate = createNamesTemplate(NAMES);
-  const offersTemplate = createEditOffersTemplate(pointTypeOffer);
+  const offersTemplateSection = createOffersTemplateSection(pointTypeOffer);
+
+  const photosTemplate = createPhotosTemplate(destination.pictures);
+
+  const createDestinationTemplateSection = (destinations) => (destinations) ?
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+       <p class="event__destination-description">${destination.description}</p>
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${photosTemplate}
+        </div>
+      </div>
+    </section>`: '';
+
+  const destinationsTemplateSection = createDestinationTemplateSection(destination);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -142,22 +162,8 @@ const createTaskEditTemplate = (point = {}) => {
       </button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-        ${offersTemplate}
-        </div>
-      </section>
-
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${destination.description}</p>
-        <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${photosTemplate}
-        </div>
-      </div>
-      </section>
+        ${offersTemplateSection}
+        ${destinationsTemplateSection}
     </section>
   </form>
   </li>`;
@@ -165,6 +171,7 @@ const createTaskEditTemplate = (point = {}) => {
 
 export default class TaskEditTemplateView extends AbstractStatefulView {
   constructor (point = BLANK_POINT) {
+
     super();
     this._state = TaskEditTemplateView.parsePointToState(point);
 
@@ -191,9 +198,16 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
+  // #descriptionInputHandler = (evt) => {
+  //   evt.preventDefault();
+  //   this._setState({
+  //     description: evt.target.value,
+  //   });
+  // };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint());
   };
 
   _restoreHandlers = () => {
@@ -202,8 +216,9 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
   };
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.event__type-list').addEventListener('click', this.#typeToggleHandler);
+    this.element.querySelector('.event__type-list').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationToggleHandler);
+    // this.element.querySelector('.event__input--destination').addEventListener('input', this.#descriptionInputHandler);
   };
 
   #typeToggleHandler = (evt) => {
@@ -211,7 +226,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     const targetPoint = offersType.find((item) => item.type === evt.target.value);
     this.updateElement({
       type: targetPoint.type,
-      offers: targetPoint.offers
+      offers: targetPoint.offers,
     });
   };
 
@@ -224,8 +239,5 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({...point});
 
-  static parseStateToPoint = (state) => {
-    const point = {...state};
-    return point;
-  };
+  static parseStateToPoint = () => ({...this._state});
 }

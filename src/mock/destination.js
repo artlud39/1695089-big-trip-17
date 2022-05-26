@@ -1,7 +1,7 @@
 import {getRandomInteger} from '../utils/common.js';
 import {generateName} from './name.js';
 
-const description = [
+export const description = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.',

@@ -24,24 +24,7 @@ export const offersType = [
   },
   {
     type: 'Bus',
-    offers: [
-      {
-        prefix: 'luggage',
-        title: 'Add luggage',
-        price: getRandomInteger(10,100),
-        id: 1,
-      },{
-        prefix: 'meal',
-        title: 'Add meal',
-        price: getRandomInteger(10,100),
-        id: 2,
-      }, {
-        prefix: 'seats',
-        title: 'Choose seats',
-        price: getRandomInteger(10,100),
-        id: 3,
-      }
-    ]
+    offers: []
   },
   {
     type: 'Train',
