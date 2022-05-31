@@ -2,7 +2,7 @@ import {getRandomInteger} from '../utils/common.js';
 
 export const offersType = [
   {
-    type: 'Taxi',
+    type: 'taxi',
     offers: [
       {
         prefix: 'business',
@@ -23,11 +23,11 @@ export const offersType = [
     ]
   },
   {
-    type: 'Bus',
+    type: 'bus',
     offers: []
   },
   {
-    type: 'Train',
+    type: 'train',
     offers: [
       {
         prefix: 'luggage',
@@ -53,7 +53,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Ship',
+    type: 'ship',
     offers: [
       {
         prefix: 'car',
@@ -74,7 +74,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Drive',
+    type: 'drive',
     offers: [
       {
         prefix: 'transponder',
@@ -91,7 +91,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Flight',
+    type: 'flight',
     offers: [
       {
         prefix: 'luggage',
@@ -122,7 +122,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Check-in',
+    type: 'check-in',
     offers: [
       {
         prefix: 'breakfast',
@@ -143,7 +143,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Sightseeing',
+    type: 'sightseeing',
     offers: [
       {
         prefix: 'tickets',
@@ -159,7 +159,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Restaurant',
+    type: 'restaurant',
     offers: [
       {
         prefix: 'book',

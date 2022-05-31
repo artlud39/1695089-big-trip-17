@@ -1,19 +1,10 @@
 import {getRandomInteger} from '../utils/common.js';
+import {POINT_TYPES} from '../const.js';
 
-export const generateType = () => {
-  const types = [
-    'Taxi',
-    'Bus',
-    'Train',
-    'Ship',
-    'Drive',
-    'Flight',
-    'Check-in',
-    'Sightseeing',
-    'Restaurant',
-  ];
+const generatePointType = () => {
+  const randomIndex = getRandomInteger(0, POINT_TYPES.length - 1);
 
-  const randomIndex = getRandomInteger(0, types.length - 1);
-
-  return types[randomIndex];
+  return POINT_TYPES[randomIndex];
 };
+
+export {generatePointType};

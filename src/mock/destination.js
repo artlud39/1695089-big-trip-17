@@ -14,26 +14,64 @@ export const description = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
+const generateRandomPicturs = () => (
+  {
+    src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
+    description: description[getRandomInteger(0, description.length - 1)],
+  }
+);
+
 export const generateRandomDestination = () => ({
   description: description[getRandomInteger(0, description.length - 1)],
   name: generateName(),
-  pictures: [
-    {
-      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
-      description: description[getRandomInteger(0, description.length - 1)],
-    },
-    {
-      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
-      description: description[getRandomInteger(0, description.length - 1)],
-    },
-    {
-      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
-      description: description[getRandomInteger(0, description.length - 1)],
-    },
-    {
-      src: `http://picsum.photos/248/152?r=${getRandomInteger()}`,
-      description: description[getRandomInteger(0, description.length - 1)],
-    },
-  ]
+  pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
 });
+
+export const destinationsCities = [
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Berlin',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Amsterdam',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'London',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Paris',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Madrid',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Oslo',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Budapest',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Rome',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+  {
+    description: description[getRandomInteger(0, description.length - 1)],
+    name: 'Zurich',
+    pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
+  },
+];
 

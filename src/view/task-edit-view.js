@@ -1,8 +1,8 @@
-import AbstractStatefulView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {editFullDate} from '../utils/point.js';
-import {NAMES, POINT_TYPES} from '../const.js';
+import {POINT_TYPES} from '../const.js';
 import {offersType} from '../mock/offers.js';
-
+import {destinationsCities} from '../mock/destination.js';
 
 const BLANK_POINT = {
   type: '',
@@ -10,16 +10,17 @@ const BLANK_POINT = {
   dateTo: null,
   price: 0,
   destination: null,
-  offers: null,
+  offers: [],
 };
 
+console.log(destinationsCities);
 const createPhotosTemplate = (destinationPhotos) => (
   `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}`
 );
 
-const createNamesTemplate = () => NAMES.map((nameCity) => `<option value="${nameCity}"></option>`).join('');
+const createNamesTemplate = () => destinationsCities.map((destinationsCity) => `<option value="${destinationsCity.name}"></option>`).join('');
 
-const createEditOffersTemplate = (data, typeOffer) => typeOffer.offers
+const createEditOffersTemplate = (data, pointTypeOffer) => pointTypeOffer.offers
   .map((offer) => {
     const checked = data.id.includes(offer.id) ? 'checked' : '';
     return `
@@ -40,15 +41,15 @@ const createPointTypes = () => POINT_TYPES.map((type) => (
     </div>`
 )).join('');
 
-const createOffersTemplateSection = (data, offersTemplate) => offersTemplate.offers.length !== 0 ? (
+const createOffersTemplateSection = (data, pointTypeOffer) =>  (
   `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
-  ${createEditOffersTemplate(data, offersTemplate)}
+  ${createEditOffersTemplate(data, pointTypeOffer)}
   </div>
-</section>`): '';
+</section>`);
 
-const createDestinationTemplateSection = (destination) => (destination) ?
+const createDestinationTemplateSection = (destination) => (
   `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
    <p class="event__destination-description">${destination.description}</p>
@@ -57,7 +58,7 @@ const createDestinationTemplateSection = (destination) => (destination) ?
       ${createPhotosTemplate(destination.pictures)}
     </div>
   </div>
-</section>`: '';
+</section>`);
 
 const createTaskEditTemplate = (data) => {
   const {type, dateFrom, dateTo, price, destination, offers} = data;
@@ -68,9 +69,13 @@ const createTaskEditTemplate = (data) => {
   const nameTemplate = createNamesTemplate();
   const pointTypeTemplate = createPointTypes();
 
-  const pointTypeOffer = offers.find((offer) => offer.type === type);
-  const offersTemplateSection = (pointTypeOffer.length !== 0) ? createOffersTemplateSection(data, pointTypeOffer): '';
-  const destinationsTemplateSection = createDestinationTemplateSection(destination);
+  // const pointTypeOffer = offers.find((offer) => offer.type === type); Так не работает, приходит undefined, не могу понять почему
+  const pointTypeOffer = offersType.find((offer) => offer.type === type); // А так работает, когда с моковых данных вставляю данные по offers
+  // console.log(pointTypeOffer);
+  // console.log(offers);
+  const offersTemplateSection = pointTypeOffer.offers.length !== 0 ? createOffersTemplateSection(data, pointTypeOffer): '';
+  const destinationsTemplateSection = destination.pictures.length !== 0 ? createDestinationTemplateSection(destination): '';
+  // console.log(destination);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -159,13 +164,6 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
-  // #descriptionInputHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this._setState({
-  //     description: evt.target.value,
-  //   });
-  // };
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
@@ -179,12 +177,13 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeCytiHandler);
-    // this.element.querySelector('.event__input--destination').addEventListener('input', this.#descriptionInputHandler);
   };
 
   #changeTypeHandler = (evt) => {
     evt.preventDefault();
-    const targetPoint = offersType.find((item) => item.type === evt.target.value);
+    const targetPoint = offersType.find((offer) => offer.type === evt.target.value);
+    // console.log(targetPoint);
+    // console.log(targetPoint.offers);
     this.updateElement({
       type: targetPoint.type,
       offers: targetPoint.offers,
@@ -193,18 +192,13 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #changeCytiHandler = (evt) => {
     evt.preventDefault();
+    const targetPoint = destinationsCities.find((city) => city.name === evt.target.value);
     this.updateElement({
-      destination: this._state.destination,
+      destination: targetPoint,
     });
   };
 
-  static parsePointToState = (point) => {
-    const state = {...point};
-    return state;
-  };
+  static parsePointToState = (point) => ({...point});
 
-  static parseStateToPoint = (state) => {
-    const point = {...state};
-    return point;
-  };
+  static parseStateToPoint = (state) => ({...state});
 }
