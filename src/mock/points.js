@@ -20,7 +20,7 @@ export const generatePoints = () => ({
   dateTo: generateDate(3,5),
   price: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),
-  destination: destinationsCities(),
+  destination: destinationsCities[getRandomInteger(0,destinationsCities.length - 1)],
   offers: offersType,
   id: nanoid(),
 });

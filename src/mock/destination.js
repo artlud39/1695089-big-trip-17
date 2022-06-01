@@ -1,5 +1,4 @@
 import {getRandomInteger} from '../utils/common.js';
-import {generateName} from './name.js';
 
 export const description = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -20,12 +19,6 @@ const generateRandomPicturs = () => (
     description: description[getRandomInteger(0, description.length - 1)],
   }
 );
-
-export const generateRandomDestination = () => ({
-  description: description[getRandomInteger(0, description.length - 1)],
-  name: generateName(),
-  pictures: Array.from({length: getRandomInteger(0,4)}, generateRandomPicturs),
-});
 
 export const destinationsCities = [
   {

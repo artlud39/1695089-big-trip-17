@@ -5,15 +5,19 @@ import {offersType} from '../mock/offers.js';
 import {destinationsCities} from '../mock/destination.js';
 
 const BLANK_POINT = {
-  type: '',
+  basePrice: 0,
   dateFrom: null,
   dateTo: null,
-  price: 0,
-  destination: null,
+  destination: {
+    description: '',
+    name: '',
+    pictures: []
+  },
+  isFavorite: false,
   offers: [],
+  type: ''
 };
 
-console.log(destinationsCities);
 const createPhotosTemplate = (destinationPhotos) => (
   `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}`
 );
@@ -71,11 +75,9 @@ const createTaskEditTemplate = (data) => {
 
   // const pointTypeOffer = offers.find((offer) => offer.type === type); Так не работает, приходит undefined, не могу понять почему
   const pointTypeOffer = offersType.find((offer) => offer.type === type); // А так работает, когда с моковых данных вставляю данные по offers
-  // console.log(pointTypeOffer);
-  // console.log(offers);
-  const offersTemplateSection = pointTypeOffer.offers.length !== 0 ? createOffersTemplateSection(data, pointTypeOffer): '';
-  const destinationsTemplateSection = destination.pictures.length !== 0 ? createDestinationTemplateSection(destination): '';
-  // console.log(destination);
+
+  const offersTemplateSection = pointTypeOffer && pointTypeOffer.offers.length !== 0 ? createOffersTemplateSection(data, pointTypeOffer): '';
+  const destinationsTemplateSection = destination && destination.pictures.length !== 0 ? createDestinationTemplateSection(destination): '';
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -182,8 +184,6 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
   #changeTypeHandler = (evt) => {
     evt.preventDefault();
     const targetPoint = offersType.find((offer) => offer.type === evt.target.value);
-    // console.log(targetPoint);
-    // console.log(targetPoint.offers);
     this.updateElement({
       type: targetPoint.type,
       offers: targetPoint.offers,
