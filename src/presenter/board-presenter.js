@@ -4,9 +4,8 @@ import NoPointTemplateView from '../view/no-point-view.js';
 import ListSortTemplateView from '../view/list-sort-view';
 import {render,RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
-import {updateItem} from '../utils/common.js';
 import {sortPointTime, sortPointPrice} from '../utils/point.js';
-import {SORT_TYPE} from '../const.js';
+import {SortType} from '../const.js';
 
 export default class BoardPresenter {
   #listContainer = null;
@@ -17,20 +16,27 @@ export default class BoardPresenter {
   #sortComponent = new ListSortTemplateView();
   #noPointComponent = new NoPointTemplateView();
 
-  #boardPoints = [];
   #pointPresenter = new Map();
-  #currentSortType = SORT_TYPE.DEFAULT;
-  #sourcedBoardPoints = [];
+  #currentSortType = SortType.DEFAULT;
 
   constructor(listContainer, pointsModel) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+  }
+
+  get points () {
+    switch (this.#currentSortType) {
+      case SortType.TIME:
+        return [...this.#pointsModel.points].sort(sortPointTime);
+      case SortType.PRICE:
+        return [...this.#pointsModel.points].sort(sortPointPrice);
+    }
+    return this.#pointsModel.points;
   }
 
   init = () => {
-    this.#boardPoints = [...this.#pointsModel.points];
-
-    this.#sourcedBoardPoints = [...this.#pointsModel.points];
     this.#renderBoard();
   };
 
@@ -38,25 +44,20 @@ export default class BoardPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
   };
 
-  #sortPoints = (sortType) => {
-    switch (sortType) {
-      case SORT_TYPE.TIME:
-        this.#boardPoints.sort(sortPointTime);
-        break;
-      case SORT_TYPE.PRICE:
-        this.#boardPoints.sort(sortPointPrice);
-        break;
-      default:
-        this.#boardPoints = [...this.#sourcedBoardPoints];
-    }
-
-    this.#currentSortType = sortType;
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -64,7 +65,7 @@ export default class BoardPresenter {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPointList();
     this.#renderPointsList();
   };
@@ -79,8 +80,9 @@ export default class BoardPresenter {
   };
 
   #renderPointsList = () => {
+    const points = this.points.slice();
     render(this.#pointListComponent, this.#pointComponent.element);
-    this.#renderPoints();
+    this.#renderPoints(points);
   };
 
   #renderPoint = (point) => {
@@ -89,10 +91,8 @@ export default class BoardPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #renderPoints = () => {
-    this.#boardPoints
-      .slice()
-      .forEach((point) => this.#renderPoint(point));
+  #renderPoints = (points) => {
+    points.forEach((point) => this.#renderPoint(point));
   };
 
   #clearPointList = () => {
@@ -103,7 +103,7 @@ export default class BoardPresenter {
   #renderBoard = () => {
     render(this.#pointComponent, this.#listContainer);
 
-    if(this.#boardPoints.every((point) => point === {})){
+    if(this.points.every((point) => point === {})){
       this.#renderNoTasks();
       return;
     }

@@ -222,7 +222,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
         minuteIncrement: 1,
-        onChange: this.#dateFromChangeHanlder,
+        onClose: this.#dateFromChangeHanlder,
       },
     );
 
@@ -233,7 +233,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
         minuteIncrement: 1,
-        onChange: this.#dateToChangeHanlder,
+        onClose: this.#dateToChangeHanlder,
       },
     );
   };
