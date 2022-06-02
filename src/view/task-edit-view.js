@@ -3,6 +3,8 @@ import {editFullDate} from '../utils/point.js';
 import {POINT_TYPES} from '../const.js';
 import {offersType} from '../mock/offers.js';
 import {destinationsCities} from '../mock/destination.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   basePrice: 0,
@@ -137,13 +139,16 @@ const createTaskEditTemplate = (data) => {
 };
 
 export default class TaskEditTemplateView extends AbstractStatefulView {
+  #dateFromDatepicker = null;
+  #dateToDatepicker = null;
+
   constructor (point = BLANK_POINT) {
 
     super();
     this._state = TaskEditTemplateView.parsePointToState(point);
 
     this.#setInnerHandlers();
-
+    this.#setDatepicker();
   }
 
   get template() {
@@ -178,13 +183,65 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditClickHandler(this._callback.editClick);
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#dateFromDatepicker) {
+      this.#dateFromDatepicker.destroy();
+      this.#dateFromDatepicker = null;
+    }
+
+    if (this.#dateToDatepicker) {
+      this.#dateToDatepicker.destroy();
+      this.#dateToDatepicker = null;
+    }
+  };
+
+  #dateFromChangeHanlder = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHanlder = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDatepicker = () => {
+    this.#dateFromDatepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        minuteIncrement: 1,
+        onChange: this.#dateFromChangeHanlder,
+      },
+    );
+
+    this.#dateToDatepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        minuteIncrement: 1,
+        onChange: this.#dateToChangeHanlder,
+      },
+    );
   };
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#changeTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeCytiHandler);
+    this.element.querySelector('#event-price-1').addEventListener('input', this.#basePriceHandler);
   };
 
   #changeTypeHandler = (evt) => {
@@ -204,6 +261,14 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
         destination: targetPoint,
       });
     }
+  };
+
+  #basePriceHandler = (evt) => {
+    evt.preventDefault();
+    const reg = /^(?:[1-9]\d*|\d)$/;
+    this._setState({
+      price: reg.test(evt.target.value) ? evt.target.value : '',
+    });
   };
 
   static parsePointToState = (point) => ({...point});
