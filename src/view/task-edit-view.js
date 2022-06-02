@@ -73,8 +73,7 @@ const createTaskEditTemplate = (data) => {
   const nameTemplate = createNamesTemplate();
   const pointTypeTemplate = createPointTypes();
 
-  // const pointTypeOffer = offers.find((offer) => offer.type === type); Так не работает, приходит undefined, не могу понять почему
-  const pointTypeOffer = offersType.find((offer) => offer.type === type); // А так работает, когда с моковых данных вставляю данные по offers
+  const pointTypeOffer = offersType.find((offer) => offer.type === type);
 
   const offersTemplateSection = pointTypeOffer && pointTypeOffer.offers.length !== 0 ? createOffersTemplateSection(data, pointTypeOffer): '';
   const destinationsTemplateSection = destination && destination.pictures.length !== 0 ? createDestinationTemplateSection(destination): '';
@@ -158,12 +157,18 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.editClick(TaskEditTemplateView.parseStateToPoint(this._state));
   };
 
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  reset = (point) => {
+    this.updateElement(
+      TaskEditTemplateView.parsePointToState(point),
+    );
   };
 
   #formSubmitHandler = (evt) => {
@@ -174,6 +179,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setEditClickHandler(this._callback.editClick);
   };
 
   #setInnerHandlers = () => {
@@ -193,9 +199,11 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
   #changeCytiHandler = (evt) => {
     evt.preventDefault();
     const targetPoint = destinationsCities.find((city) => city.name === evt.target.value);
-    this.updateElement({
-      destination: targetPoint,
-    });
+    if (targetPoint) {
+      this.updateElement({
+        destination: targetPoint,
+      });
+    }
   };
 
   static parsePointToState = (point) => ({...point});
