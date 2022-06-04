@@ -1,19 +1,10 @@
 import {getRandomInteger} from '../utils/common.js';
+import {NAMES} from '../const.js';
 
-export const generateName= () => {
-  const names = [
-    'Berlin',
-    'Amsterdam',
-    'London',
-    'Paris',
-    'Madrid',
-    'Oslo',
-    'Budapest',
-    'Rome',
-    'Zurich',
-  ];
+const generateName = () => {
+  const randomIndex = getRandomInteger(0, NAMES.length - 1);
 
-  const randomIndex = getRandomInteger(0, names.length - 1);
-
-  return names[randomIndex];
+  return NAMES[randomIndex];
 };
+
+export {generateName};

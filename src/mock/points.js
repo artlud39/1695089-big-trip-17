@@ -1,6 +1,6 @@
 import {getRandomInteger} from '../utils/common.js';
-import {generateType} from './type.js';
-import {generateRandomDestination} from './destination.js';
+import {generatePointType} from './type.js';
+import {destinationsCities} from './destination.js';
 import {offersType} from './offers.js';
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
@@ -15,12 +15,12 @@ const generateDate = (dayStart, dayEnd) => {
 };
 
 export const generatePoints = () => ({
-  type: generateType(),
+  type: generatePointType(),
   dateFrom: generateDate(0,2),
   dateTo: generateDate(3,5),
   price: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),
-  destination: generateRandomDestination(),
+  destination: destinationsCities[getRandomInteger(0,destinationsCities.length - 1)],
   offers: offersType,
   id: nanoid(),
 });

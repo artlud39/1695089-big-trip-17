@@ -2,7 +2,7 @@ import {getRandomInteger} from '../utils/common.js';
 
 export const offersType = [
   {
-    type: 'Taxi',
+    type: 'taxi',
     offers: [
       {
         prefix: 'business',
@@ -23,28 +23,11 @@ export const offersType = [
     ]
   },
   {
-    type: 'Bus',
-    offers: [
-      {
-        prefix: 'luggage',
-        title: 'Add luggage',
-        price: getRandomInteger(10,100),
-        id: 1,
-      },{
-        prefix: 'meal',
-        title: 'Add meal',
-        price: getRandomInteger(10,100),
-        id: 2,
-      }, {
-        prefix: 'seats',
-        title: 'Choose seats',
-        price: getRandomInteger(10,100),
-        id: 3,
-      }
-    ]
+    type: 'bus',
+    offers: []
   },
   {
-    type: 'Train',
+    type: 'train',
     offers: [
       {
         prefix: 'luggage',
@@ -70,7 +53,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Ship',
+    type: 'ship',
     offers: [
       {
         prefix: 'car',
@@ -91,7 +74,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Drive',
+    type: 'drive',
     offers: [
       {
         prefix: 'transponder',
@@ -108,7 +91,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Flight',
+    type: 'flight',
     offers: [
       {
         prefix: 'luggage',
@@ -139,7 +122,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Check-in',
+    type: 'check-in',
     offers: [
       {
         prefix: 'breakfast',
@@ -160,7 +143,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Sightseeing',
+    type: 'sightseeing',
     offers: [
       {
         prefix: 'tickets',
@@ -176,7 +159,7 @@ export const offersType = [
     ]
   },
   {
-    type: 'Restaurant',
+    type: 'restaurant',
     offers: [
       {
         prefix: 'book',

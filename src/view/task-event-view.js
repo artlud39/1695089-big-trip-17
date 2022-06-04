@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
+import {offersType} from '../mock/offers.js';
 
 const createTaskTemplate = (point) => {
   const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
@@ -14,7 +15,7 @@ const createTaskTemplate = (point) => {
 
   const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
 
-  const pointTypeOffer = offers.find((offer) => offer.type === point.type);
+  const pointTypeOffer = offersType.find((offer) => offer.type === type);
 
   const createEditOffersTemplate = (typeOffer) => typeOffer.offers
     .map((offer) => {
