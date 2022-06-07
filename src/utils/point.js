@@ -52,6 +52,7 @@ const sortPointTime = (pointA, pointB) => {
 
 const sortPointPrice = (pointA, pointB) => pointB.price - pointA.price;
 
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 
 export {
   humanizeTaskdate,
@@ -66,4 +67,5 @@ export {
   isPastPoints,
   sortPointTime,
   sortPointPrice,
+  isDatesEqual,
 };

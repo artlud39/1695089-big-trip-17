@@ -181,11 +181,17 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
   };
 
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+  };
+
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditClickHandler(this._callback.editClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   removeElement = () => {
@@ -200,6 +206,11 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
       this.#dateToDatepicker.destroy();
       this.#dateToDatepicker = null;
     }
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(TaskEditTemplateView.parseStateToPoint(this._state));
   };
 
   #dateFromChangeHanlder = ([userDate]) => {
