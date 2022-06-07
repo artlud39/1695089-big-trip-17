@@ -1,46 +1,66 @@
 import TaskListTemplateView from '../view/task-list-view.js';
 import BoardView from '../view/board-view.js';
-import NoPointTemplateView from '../view/no-point-view.js';
+import NoPointView from '../view/no-point-view.js';
+import PointNewPresenter from './point-new-presenter.js';
 import SortView from '../view/sort-view.js';
 import {render, RenderPosition, remove} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import {sortPointTime, sortPointPrice} from '../utils/point.js';
-import {SortType, UpdateType, UserAction} from '../const.js';
+import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
+import {filter} from '../utils/filter.js';
 
 export default class BoardPresenter {
   #listContainer = null;
   #pointsModel = null;
+  #filterModel = null;
 
   #boardComponent = new BoardView();
   #pointListComponent = new TaskListTemplateView();
-  #noPointComponent = new NoPointTemplateView();
+  #noPointComponent = null;
   #sortComponent = null;
 
   #pointPresenter = new Map();
+  #pointNewPresenter = null;
   #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.EVERYTHING;
 
-  constructor(listContainer, pointsModel) {
+  constructor(listContainer, pointsModel, filterModel) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+
+    this.#pointNewPresenter = new PointNewPresenter(this.#pointListComponent.element, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points () {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return [...this.#pointsModel.points].sort(sortPointTime);
+        return filteredPoints.sort(sortPointTime);
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
     }
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   init = () => {
     this.#renderBoard();
   };
 
+  createPoint = (callback) => {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#pointNewPresenter.init(callback);
+  };
+
   #handleModeChange = () => {
+    this.#pointNewPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
@@ -101,10 +121,12 @@ export default class BoardPresenter {
   };
 
   #renderNoPoints = () => {
+    this.#noPointComponent = new NoPointView(this.#filterType);
     render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
   };
 
   #clearBoard = ({resetSortType = false} = {}) => {
+    this.#pointNewPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 

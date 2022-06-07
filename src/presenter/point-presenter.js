@@ -1,5 +1,5 @@
-import TaskEditTemplateView from '../view/task-edit-view.js';
-import TaskEventTemplateView from '../view/task-event-view.js';
+import PointEditTemplateView from '../view/point-edit-view.js';
+import PointTemplateView from '../view/point-view.js';
 import {render, replace, remove} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import {isDatesEqual} from '../utils/point.js';
@@ -32,8 +32,8 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#pointComponent = new TaskEventTemplateView(point);
-    this.#pointEditComponent = new TaskEditTemplateView(point);
+    this.#pointComponent = new PointTemplateView(point);
+    this.#pointEditComponent = new PointEditTemplateView(point);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

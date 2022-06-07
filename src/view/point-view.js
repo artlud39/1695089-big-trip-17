@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
 import {offersType} from '../mock/offers.js';
+import he from 'he';
 
 const createTaskTemplate = (point) => {
   const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
@@ -69,7 +70,7 @@ const createTaskTemplate = (point) => {
   );
 };
 
-export default class TaskEventTemplateView extends AbstractView {
+export default class PointTemplateView extends AbstractView {
   #point = null;
 
   constructor(point) {

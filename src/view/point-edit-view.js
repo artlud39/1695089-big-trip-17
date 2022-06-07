@@ -4,6 +4,7 @@ import {POINT_TYPES} from '../const.js';
 import {offersType} from '../mock/offers.js';
 import {destinationsCities} from '../mock/destination.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
@@ -138,14 +139,14 @@ const createTaskEditTemplate = (data) => {
   </li>`;
 };
 
-export default class TaskEditTemplateView extends AbstractStatefulView {
+export default class PointEditTemplateView extends AbstractStatefulView {
   #dateFromDatepicker = null;
   #dateToDatepicker = null;
 
   constructor (point = BLANK_POINT) {
 
     super();
-    this._state = TaskEditTemplateView.parsePointToState(point);
+    this._state = PointEditTemplateView.parsePointToState(point);
 
     this.#setInnerHandlers();
     this.#setDatepicker();
@@ -162,7 +163,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.editClick(PointEditTemplateView.parseStateToPoint(this._state));
   };
 
   setFormSubmitHandler = (callback) => {
@@ -172,13 +173,13 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   reset = (point) => {
     this.updateElement(
-      TaskEditTemplateView.parsePointToState(point),
+      PointEditTemplateView.parsePointToState(point),
     );
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.formSubmit(PointEditTemplateView.parseStateToPoint(this._state));
   };
 
   setDeleteClickHandler = (callback) => {
@@ -210,7 +211,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.deleteClick(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.deleteClick(PointEditTemplateView.parseStateToPoint(this._state));
   };
 
   #dateFromChangeHanlder = ([userDate]) => {
