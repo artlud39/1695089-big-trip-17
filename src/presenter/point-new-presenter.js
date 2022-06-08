@@ -1,7 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import PointEditTemplateView from '../view/point-edit-view.js';
 import {nanoid} from 'nanoid';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, BLANK_POINT} from '../const.js';
 
 export default class PointNewPresenter {
   #pointListContainer = null;
@@ -9,9 +9,16 @@ export default class PointNewPresenter {
   #pointEditComponent = null;
   #destroyCallback = null;
 
-  constructor(pointListContainer, changeData) {
+  #offersModel = null;
+  #destinationsModel = null;
+
+  constructor(pointListContainer, offersModel, destinationsModel, changeData) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
+
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
+
   }
 
   init = (callback) => {
@@ -21,7 +28,7 @@ export default class PointNewPresenter {
       return;
     }
 
-    this.#pointEditComponent = new PointEditTemplateView();
+    this.#pointEditComponent = new PointEditTemplateView(BLANK_POINT, this.#offersModel.offers, this.#destinationsModel.destinations);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 

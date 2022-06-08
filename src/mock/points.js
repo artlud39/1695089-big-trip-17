@@ -18,9 +18,9 @@ export const generatePoints = () => ({
   type: generatePointType(),
   dateFrom: generateDate(0,2),
   dateTo: generateDate(3,5),
-  price: getRandomInteger(200,1500),
+  basePrice: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),
   destination: destinationsCities[getRandomInteger(0,destinationsCities.length - 1)],
-  offers: offersType,
+  offers: offersType[getRandomInteger(0,offersType.length - 1)],
   id: nanoid(),
 });

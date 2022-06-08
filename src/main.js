@@ -5,6 +5,8 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import {render} from './framework/render.js';
+import OffersModel from './model/offers-model.js';
+import DestinationsModel from './model/destinations-model.js';
 
 const siteTripMainElement = document.querySelector('.trip-main');
 const siteTripControlsElement = siteTripMainElement.querySelector('.trip-controls__filters');
@@ -14,24 +16,25 @@ const siteTripEventsElement = sitePageMainElement.querySelector('.page-body__con
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
-
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 
 const tripInfoPresenter = new TripInfoPresenter(siteTripMainElement, pointsModel);
-const boardPresenter = new BoardPresenter(siteTripEventsElement,pointsModel, filterModel);
+const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel, offersModel, destinationsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteTripControlsElement, filterModel, pointsModel);
 const newPointButtonComponent = new NewPointButtonView();
 
-const handleNewTaskFormClose = () => {
+const handleNewPointFormClose = () => {
   newPointButtonComponent.element.disabled = false;
 };
 
-const handleNewTaskButtonClick = () => {
-  boardPresenter.createPoint(handleNewTaskFormClose);
+const handleNewPointButtonClick = () => {
+  boardPresenter.createPoint(handleNewPointFormClose);
   newPointButtonComponent.element.disabled = true;
 };
 
 render(newPointButtonComponent, siteTripMainElement);
-newPointButtonComponent.setClickHandler(handleNewTaskButtonClick);
+newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
 
 tripInfoPresenter.init();
 filterPresenter.init();

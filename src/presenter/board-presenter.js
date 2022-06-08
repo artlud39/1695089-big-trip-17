@@ -1,4 +1,4 @@
-import TaskListTemplateView from '../view/task-list-view.js';
+import PointListTemplateView from '../view/point-list-view.js';
 import BoardView from '../view/board-view.js';
 import NoPointView from '../view/no-point-view.js';
 import PointNewPresenter from './point-new-presenter.js';
@@ -6,16 +6,19 @@ import SortView from '../view/sort-view.js';
 import {render, RenderPosition, remove} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import {sortPointTime, sortPointPrice} from '../utils/point.js';
-import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {filter} from '../utils/filter.js';
+import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 
 export default class BoardPresenter {
   #listContainer = null;
   #pointsModel = null;
   #filterModel = null;
 
+  #offersModel = null;
+  #destinationsModel = null;
+
   #boardComponent = new BoardView();
-  #pointListComponent = new TaskListTemplateView();
+  #pointListComponent = new PointListTemplateView();
   #noPointComponent = null;
   #sortComponent = null;
 
@@ -24,12 +27,15 @@ export default class BoardPresenter {
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.EVERYTHING;
 
-  constructor(listContainer, pointsModel, filterModel) {
+  constructor(listContainer, pointsModel, offersModel, destinationsModel, filterModel) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
-    this.#pointNewPresenter = new PointNewPresenter(this.#pointListComponent.element, this.#handleViewAction);
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
+
+    this.#pointNewPresenter = new PointNewPresenter(this.#pointListComponent.element, this.#offersModel, this.#destinationsModel, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -111,7 +117,7 @@ export default class BoardPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handleViewAction, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#handleViewAction, this.#offersModel.offers, this.#destinationsModel.destinations, this.#handleModeChange);
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
