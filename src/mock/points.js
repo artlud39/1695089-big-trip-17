@@ -21,6 +21,6 @@ export const generatePoints = () => ({
   basePrice: getRandomInteger(200,1500),
   isFavorite: Boolean(getRandomInteger(0,1)),
   destination: destinationsCities[getRandomInteger(0,destinationsCities.length - 1)],
-  offers: offersType[getRandomInteger(0,offersType.length - 1)],
+  offers: offersType[getRandomInteger(0,offersType.length - 1)].offers,
   id: nanoid(),
 });

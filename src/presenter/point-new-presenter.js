@@ -9,6 +9,7 @@ export default class PointNewPresenter {
   #pointEditComponent = null;
   #destroyCallback = null;
 
+  #isNewPoint = true;
   #offersModel = null;
   #destinationsModel = null;
 
@@ -18,7 +19,6 @@ export default class PointNewPresenter {
 
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
-
   }
 
   init = (callback) => {
@@ -28,7 +28,7 @@ export default class PointNewPresenter {
       return;
     }
 
-    this.#pointEditComponent = new PointEditTemplateView(BLANK_POINT, this.#offersModel.offers, this.#destinationsModel.destinations);
+    this.#pointEditComponent = new PointEditTemplateView(BLANK_POINT, this.#offersModel.offers, this.#destinationsModel.destinations, this.#isNewPoint);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 

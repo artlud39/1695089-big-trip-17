@@ -49,6 +49,12 @@ const createDestinationSection = (destination) => (
   </div>
 </section>`);
 
+const showRollupButton = () => (
+  `<button class="event__rollup-btn" type="button">
+     <span class="visually-hidden">Open event</span>
+  </button>`
+);
+
 const createPointEditTemplate = (data, allOffers, destinations, isNewPoint) => {
   const {type, dateFrom, dateTo, basePrice, destination, offers} = data;
 
@@ -63,6 +69,7 @@ const createPointEditTemplate = (data, allOffers, destinations, isNewPoint) => {
 
   const offersTemplateSection = pointTypeOffer && pointTypeOffer.length !== 0 ? createOffersSection(data, pointTypeOffer): '';
   const destinationsTemplateSection = destination && destination.pictures.length !== 0 ? createDestinationSection(destination): '';
+  const rollupButton = showRollupButton();
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -110,9 +117,7 @@ const createPointEditTemplate = (data, allOffers, destinations, isNewPoint) => {
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      ${isNewPoint ? '' : rollupButton}
     </header>
     <section class="event__details">
         ${offersTemplateSection}
@@ -146,6 +151,9 @@ export default class PointEditTemplateView extends AbstractStatefulView {
   }
 
   setEditClickHandler = (callback) => {
+    if (this.#isNewPoint) {
+      return;
+    }
     this._callback.editClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
@@ -268,7 +276,7 @@ export default class PointEditTemplateView extends AbstractStatefulView {
     evt.preventDefault();
     const reg = /^(?:[1-9]\d*|\d)$/;
     this._setState({
-      price: reg.test(evt.target.value) ? evt.target.value : '',
+      basePrice: reg.test(evt.target.value) ? evt.target.value : '',
     });
   };
 

@@ -3,7 +3,7 @@ import {getPeriodTripDayMonth, getFullWayCities} from '../utils/point.js';
 
 const createTripInfoTemplate = (points) => {
 
-  const costTrip = points.reduce((sum, point) => sum + point.price, 0);
+  const costTrip = points.reduce((sum, point) => sum + point.basePrice, 0);
   const periodTrip = getPeriodTripDayMonth(points);
   const fullWayCities = getFullWayCities(points);
 
