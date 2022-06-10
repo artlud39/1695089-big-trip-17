@@ -12,13 +12,13 @@ const createPointTemplate = (point, allOffers) => {
   const fullDateEnd = dateTo !== null ? fullDate(dateTo): '';
   const durationTripDate = getDurationTripDate(dateFrom, dateTo);
 
-  const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
+  const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': 'event__favorite-btn--passive';
 
   const pointTypeOffer = allOffers.find((offer) => offer.type === type);
 
   const createEditOffersTemplate = (typeOffer) => typeOffer.offers
     .map((offer) => {
-      const checked = point.id.includes(offer.id) ? 'checked' : '';
+      const checked = offers.includes(offer.id) ? 'checked' : '';
       if(checked) {
         return `
         <li class="event__offer">
@@ -27,9 +27,13 @@ const createPointTemplate = (point, allOffers) => {
           <span class="event__offer-price">${offer.price}</span>
         </li>`;
       }
-    }).join(' ');
+    }).join('');
 
-  const offersTemplate = createEditOffersTemplate(pointTypeOffer);
+  const createOffersList = () => offers.length !== 0 ?
+    `<ul class="event__selected-offers">
+     ${createEditOffersTemplate(pointTypeOffer)}
+    </ul>` : '';
+  const offersTemplate = createOffersList();
 
   return (
     `<li class="trip-events__item">
@@ -51,9 +55,7 @@ const createPointTemplate = (point, allOffers) => {
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
             ${offersTemplate}
-        </ul>
         <button class="event__favorite-btn  ${isPointFavorite}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -68,7 +70,7 @@ const createPointTemplate = (point, allOffers) => {
   );
 };
 
-export default class PointTemplateView extends AbstractView {
+export default class PointView extends AbstractView {
   #point = null;
   #offersModel = null;
 

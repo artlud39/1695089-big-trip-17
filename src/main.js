@@ -20,11 +20,9 @@ const siteTripEventsElement = sitePageMainElement.querySelector('.page-body__con
 
 const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
-const offersModel = new OffersModel(new PointsApiService(END_POINT, AUTHORIZATION));
-const destinationsModel = new DestinationsModel(new PointsApiService(END_POINT, AUTHORIZATION));
 
 const tripInfoPresenter = new TripInfoPresenter(siteTripMainElement, pointsModel);
-const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel, offersModel, destinationsModel, filterModel);
+const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteTripControlsElement, filterModel, pointsModel);
 const newPointButtonComponent = new NewPointButtonView();
 
@@ -41,8 +39,6 @@ tripInfoPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
 
-offersModel.init();
-destinationsModel.init();
 pointsModel.init()
   .finally(() => {
     render(newPointButtonComponent, siteTripMainElement);
