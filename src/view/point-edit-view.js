@@ -1,32 +1,15 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {editFullDate} from '../utils/point.js';
-import {POINT_TYPES} from '../const.js';
-import {offersType} from '../mock/offers.js';
-import {destinationsCities} from '../mock/destination.js';
+import {POINT_TYPES, BLANK_POINT} from '../const.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
-
-const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: null,
-  dateTo: null,
-  destination: {
-    description: '',
-    name: '',
-    pictures: []
-  },
-  isFavorite: false,
-  offers: [],
-  type: ''
-};
 
 const createPhotosTemplate = (destinationPhotos) => (
   `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}`
 );
 
-const createNamesTemplate = () => destinationsCities.map((destinationsCity) => `<option value="${destinationsCity.name}"></option>`).join('');
-
-const createEditOffersTemplate = (data, pointTypeOffer) => pointTypeOffer.offers
+const createEditOffersTemplate = (data, pointTypeOffer) => pointTypeOffer
   .map((offer) => {
     const checked = data.id.includes(offer.id) ? 'checked' : '';
     return `
@@ -47,7 +30,7 @@ const createPointTypes = () => POINT_TYPES.map((type) => (
     </div>`
 )).join('');
 
-const createOffersTemplateSection = (data, pointTypeOffer) =>  (
+const createOffersSection = (data, pointTypeOffer) =>  (
   `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
@@ -55,10 +38,10 @@ const createOffersTemplateSection = (data, pointTypeOffer) =>  (
   </div>
 </section>`);
 
-const createDestinationTemplateSection = (destination) => (
+const createDestinationSection = (destination) => (
   `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-   <p class="event__destination-description">${destination.description}</p>
+   <p class="event__destination-description">${he.encode(destination.description)}</p>
   <div class="event__photos-container">
     <div class="event__photos-tape">
       ${createPhotosTemplate(destination.pictures)}
@@ -66,19 +49,27 @@ const createDestinationTemplateSection = (destination) => (
   </div>
 </section>`);
 
-const createTaskEditTemplate = (data) => {
-  const {type, dateFrom, dateTo, price, destination, offers} = data;
+const showRollupButton = () => (
+  `<button class="event__rollup-btn" type="button">
+     <span class="visually-hidden">Open event</span>
+  </button>`
+);
 
-  const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): 'From';
-  const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): 'To';
+const createPointEditTemplate = (data, allOffers, destinations, isNewPoint) => {
+  const {type, dateFrom, dateTo, basePrice, destination, offers} = data;
 
-  const nameTemplate = createNamesTemplate();
+  const editFullDateStart = dateFrom !== null ? editFullDate(dateFrom): '';
+  const editFullDateEnd = dateTo !== null ? editFullDate(dateTo): '';
+
+  const createCitiesTemplate = () => destinations.map((destinationName) => `<option value="${destinationName.name}"></option>`).join('');
+  const citiesTemplate = createCitiesTemplate();
   const pointTypeTemplate = createPointTypes();
 
-  const pointTypeOffer = offersType.find((offer) => offer.type === type);
+  const pointTypeOffer = allOffers.find((offer) => offer.type === type).offers;
 
-  const offersTemplateSection = pointTypeOffer && pointTypeOffer.offers.length !== 0 ? createOffersTemplateSection(data, pointTypeOffer): '';
-  const destinationsTemplateSection = destination && destination.pictures.length !== 0 ? createDestinationTemplateSection(destination): '';
+  const offersTemplateSection = pointTypeOffer && pointTypeOffer.length !== 0 ? createOffersSection(data, pointTypeOffer): '';
+  const destinationsTemplateSection = destination && destination.pictures.length !== 0 ? createDestinationSection(destination): '';
+  const rollupButton = showRollupButton();
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -104,7 +95,7 @@ const createTaskEditTemplate = (data) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
-          ${nameTemplate}
+          ${citiesTemplate}
         </datalist>
       </div>
 
@@ -121,14 +112,12 @@ const createTaskEditTemplate = (data) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" pattern="[0-9]+" title="Только числа"  value="${basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
-      <button class="event__rollup-btn" type="button">
-        <span class="visually-hidden">Open event</span>
-      </button>
+      <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+      ${isNewPoint ? '' : rollupButton}
     </header>
     <section class="event__details">
         ${offersTemplateSection}
@@ -138,31 +127,40 @@ const createTaskEditTemplate = (data) => {
   </li>`;
 };
 
-export default class TaskEditTemplateView extends AbstractStatefulView {
+export default class PointEditTemplateView extends AbstractStatefulView {
   #dateFromDatepicker = null;
   #dateToDatepicker = null;
+  #offersModel = null;
+  #destinationsModel = null;
+  #isNewPoint = null;
 
-  constructor (point = BLANK_POINT) {
-
+  constructor (point = BLANK_POINT, offersModel, destinationsModel, isNewPoint = false) {
     super();
-    this._state = TaskEditTemplateView.parsePointToState(point);
+    this._state = PointEditTemplateView.parsePointToState(point);
+
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
+    this.#isNewPoint = isNewPoint;
 
     this.#setInnerHandlers();
     this.#setDatepicker();
   }
 
   get template() {
-    return createTaskEditTemplate(this._state);
+    return createPointEditTemplate(this._state, this.#offersModel, this.#destinationsModel, this.#isNewPoint);
   }
 
   setEditClickHandler = (callback) => {
+    if (this.#isNewPoint) {
+      return;
+    }
     this._callback.editClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.editClick(PointEditTemplateView.parseStateToPoint(this._state));
   };
 
   setFormSubmitHandler = (callback) => {
@@ -172,13 +170,18 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   reset = (point) => {
     this.updateElement(
-      TaskEditTemplateView.parsePointToState(point),
+      PointEditTemplateView.parsePointToState(point),
     );
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(TaskEditTemplateView.parseStateToPoint(this._state));
+    this._callback.formSubmit(PointEditTemplateView.parseStateToPoint(this._state));
+  };
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
   };
 
   _restoreHandlers = () => {
@@ -186,6 +189,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     this.#setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditClickHandler(this._callback.editClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
   removeElement = () => {
@@ -200,6 +204,11 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
       this.#dateToDatepicker.destroy();
       this.#dateToDatepicker = null;
     }
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(PointEditTemplateView.parseStateToPoint(this._state));
   };
 
   #dateFromChangeHanlder = ([userDate]) => {
@@ -222,7 +231,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
         minuteIncrement: 1,
-        onChange: this.#dateFromChangeHanlder,
+        onClose: this.#dateFromChangeHanlder,
       },
     );
 
@@ -233,7 +242,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
         minuteIncrement: 1,
-        onChange: this.#dateToChangeHanlder,
+        onClose: this.#dateToChangeHanlder,
       },
     );
   };
@@ -246,7 +255,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #changeTypeHandler = (evt) => {
     evt.preventDefault();
-    const targetPoint = offersType.find((offer) => offer.type === evt.target.value);
+    const targetPoint = this.#offersModel.find((offer) => offer.type === evt.target.value);
     this.updateElement({
       type: targetPoint.type,
       offers: targetPoint.offers,
@@ -255,7 +264,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
 
   #changeCytiHandler = (evt) => {
     evt.preventDefault();
-    const targetPoint = destinationsCities.find((city) => city.name === evt.target.value);
+    const targetPoint = this.#destinationsModel.find((city) => city.name === evt.target.value);
     if (targetPoint) {
       this.updateElement({
         destination: targetPoint,
@@ -267,7 +276,7 @@ export default class TaskEditTemplateView extends AbstractStatefulView {
     evt.preventDefault();
     const reg = /^(?:[1-9]\d*|\d)$/;
     this._setState({
-      price: reg.test(evt.target.value) ? evt.target.value : '',
+      basePrice: reg.test(evt.target.value) ? evt.target.value : '',
     });
   };
 

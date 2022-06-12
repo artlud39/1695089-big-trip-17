@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 const createTaskListTemplate = () => '<ul class="trip-events__list"></ul>';
 
-export default class TaskListTemplateView  extends AbstractView {
+export default class PointListTemplateView  extends AbstractView {
   get template() {
     return createTaskListTemplate();
   }

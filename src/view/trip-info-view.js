@@ -1,9 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {getPeriodTripDayMonth, getFullWayCities} from '../utils/point.js';
 
-const createNewTaskTripInfoTemplate = (points) => {
+const createTripInfoTemplate = (points) => {
 
-  const costTrip = points.reduce((sum, point) => sum + point.price, 0);
+  const costTrip = points.reduce((sum, point) => sum + point.basePrice, 0);
   const periodTrip = getPeriodTripDayMonth(points);
   const fullWayCities = getFullWayCities(points);
 
@@ -29,6 +29,6 @@ export default class TripInfoTemplateView extends AbstractView {
   }
 
   get template() {
-    return createNewTaskTripInfoTemplate(this.#points);
+    return createTripInfoTemplate(this.#points);
   }
 }

@@ -1,9 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
-import {offersType} from '../mock/offers.js';
 
-const createTaskTemplate = (point) => {
-  const {type, dateFrom, dateTo, price, isFavorite, destination, offers} = point;
+const createPointTemplate = (point, allOffers) => {
+  const {type, dateFrom, dateTo, basePrice, isFavorite, destination, offers} = point;
 
   const dateFromHumanize = dateFrom !== null ? humanizeTaskdate(dateFrom): '';
   const dateFromYearMonthDayDate = dateFrom !== null ? yearMonthDayDate(dateFrom): '';
@@ -11,11 +10,11 @@ const createTaskTemplate = (point) => {
   const dateEndHoursMinutes = dateTo !== null ? hoursMinutesDate(dateTo): '';
   const fullDateStart = dateFrom !== null ? fullDate(dateFrom): '';
   const fullDateEnd = dateTo !== null ? fullDate(dateTo): '';
-  const durationTripDate = getDurationTripDate(dateFrom,dateTo);
+  const durationTripDate = getDurationTripDate(dateFrom, dateTo);
 
   const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': '';
 
-  const pointTypeOffer = offersType.find((offer) => offer.type === type);
+  const pointTypeOffer = allOffers.find((offer) => offer.type === type);
 
   const createEditOffersTemplate = (typeOffer) => typeOffer.offers
     .map((offer) => {
@@ -49,7 +48,7 @@ const createTaskTemplate = (point) => {
           <p class="event__duration">${durationTripDate}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
@@ -69,16 +68,18 @@ const createTaskTemplate = (point) => {
   );
 };
 
-export default class TaskEventTemplateView extends AbstractView {
+export default class PointTemplateView extends AbstractView {
   #point = null;
+  #offersModel = null;
 
-  constructor(point) {
+  constructor(point, offersModel) {
     super();
     this.#point = point;
+    this.#offersModel = offersModel;
   }
 
   get template() {
-    return createTaskTemplate(this.#point);
+    return createPointTemplate(this.#point, this.#offersModel);
   }
 
   setEditClickHandler = (callback) => {
