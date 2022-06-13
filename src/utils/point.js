@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const humanizeTaskdate = (date) => dayjs(date).format('MMM DD');
+const humanizePointdate = (date) => dayjs(date).format('MMM DD');
 const yearMonthDayDate = (date) => dayjs(date).format('YYYY-MM-DD');
 const hoursMinutesDate = (date) => dayjs(date).format('hh:mm');
 const fullDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
@@ -20,13 +20,13 @@ const getDurationTripDate = (dayStart, dayEnd) => {
 
 const getPeriodTripDayMonth = (points) => {
   if (points.length === 1) {
-    return humanizeTaskdate(points[0].dateFrom);
+    return humanizePointdate(points[0].dateFrom);
   }
   const start = points[0].dateFrom;
   const finish =points[points.length - 1].dateTo;
   return isSameMonth(start,finish)
-    ? `${humanizeTaskdate(start)}&nbsp;&mdash;&nbsp;${dayjs(finish).format('DD')}`
-    : `${humanizeTaskdate(start)}&nbsp;&mdash;&nbsp;${humanizeTaskdate(finish)}`;
+    ? `${humanizePointdate(start)}&nbsp;&mdash;&nbsp;${dayjs(finish).format('DD')}`
+    : `${humanizePointdate(start)}&nbsp;&mdash;&nbsp;${humanizePointdate(finish)}`;
 };
 
 const getFullWayCities = (points) => {
@@ -51,11 +51,11 @@ const sortPointTime = (pointA, pointB) => {
 };
 
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
-
-const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+const sortPointDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB);
 
 export {
-  humanizeTaskdate,
+  humanizePointdate,
   yearMonthDayDate,
   hoursMinutesDate,
   fullDate,
@@ -65,6 +65,7 @@ export {
   getFullWayCities,
   isFuturePoints,
   isPastPoints,
+  sortPointDay,
   sortPointTime,
   sortPointPrice,
   isDatesEqual,

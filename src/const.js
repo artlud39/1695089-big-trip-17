@@ -1,23 +1,11 @@
 import dayjs from 'dayjs';
 
-const NAMES = [
-  'Berlin',
-  'Amsterdam',
-  'London',
-  'Paris',
-  'Madrid',
-  'Oslo',
-  'Budapest',
-  'Rome',
-  'Zurich',
-];
-
 const BLANK_POINT = {
   id: '',
   type: 'bus',
   basePrice: '',
   dateFrom: dayjs().toISOString(),
-  dateTo: null,
+  dateTo: dayjs().toISOString(),
   destination: {
     description: '',
     name: '',
@@ -61,6 +49,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
-export {NAMES, BLANK_POINT, FilterType, SortType, POINT_TYPES, UserAction, UpdateType};
+export {BLANK_POINT, FilterType, SortType, POINT_TYPES, UserAction, UpdateType};
