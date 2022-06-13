@@ -1,15 +1,14 @@
 import {render} from './framework/render.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
-import OffersModel from './model/offers-model.js';
-import DestinationsModel from './model/destinations-model.js';
+
 import BoardPresenter from './presenter/board-presenter.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic Sg23Fl44wcl6sA1j';
+const AUTHORIZATION = 'Basic Sg23Fl34Wc26sA1j';
 const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/';
 
 const siteTripMainElement = document.querySelector('.trip-main');

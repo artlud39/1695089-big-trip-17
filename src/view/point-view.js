@@ -1,10 +1,22 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeTaskdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
+import {humanizePointdate, yearMonthDayDate, hoursMinutesDate, fullDate, getDurationTripDate} from '../utils/point.js';
 
-const createPointTemplate = (point, allOffers) => {
+const createEditOffersTemplate = (offersIds, typeOffer) => offersIds.map((id) => {
+  const currentOffer = typeOffer.offers.find((offer) => offer.id === id);
+  if(currentOffer) {
+    return `
+      <li class="event__offer">
+        <span class="event__offer-title">${currentOffer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${currentOffer.price}</span>
+      </li>`;
+  }
+}).join('');
+
+const createPointTemplate = (point, currentOffer) => {
   const {type, dateFrom, dateTo, basePrice, isFavorite, destination, offers} = point;
 
-  const dateFromHumanize = dateFrom !== null ? humanizeTaskdate(dateFrom): '';
+  const dateFromHumanize = dateFrom !== null ? humanizePointdate(dateFrom): '';
   const dateFromYearMonthDayDate = dateFrom !== null ? yearMonthDayDate(dateFrom): '';
   const dateStartHoursMinutes = dateFrom !== null ? hoursMinutesDate(dateFrom): '';
   const dateEndHoursMinutes = dateTo !== null ? hoursMinutesDate(dateTo): '';
@@ -14,24 +26,9 @@ const createPointTemplate = (point, allOffers) => {
 
   const isPointFavorite = (isFavorite) ? 'event__favorite-btn--active': 'event__favorite-btn--passive';
 
-  const pointTypeOffer = allOffers.find((offer) => offer.type === type);
-
-  const createEditOffersTemplate = (typeOffer) => typeOffer.offers
-    .map((offer) => {
-      const checked = offers.includes(offer.id) ? 'checked' : '';
-      if(checked) {
-        return `
-        <li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </li>`;
-      }
-    }).join('');
-
   const createOffersList = () => offers.length !== 0 ?
     `<ul class="event__selected-offers">
-     ${createEditOffersTemplate(pointTypeOffer)}
+     ${createEditOffersTemplate(offers, currentOffer)}
     </ul>` : '';
   const offersTemplate = createOffersList();
 
@@ -72,16 +69,16 @@ const createPointTemplate = (point, allOffers) => {
 
 export default class PointView extends AbstractView {
   #point = null;
-  #offersModel = null;
+  #currentOffer = null;
 
-  constructor(point, offersModel) {
+  constructor(point, currentOffer) {
     super();
     this.#point = point;
-    this.#offersModel = offersModel;
+    this.#currentOffer = currentOffer;
   }
 
   get template() {
-    return createPointTemplate(this.#point, this.#offersModel);
+    return createPointTemplate(this.#point, this.#currentOffer);
   }
 
   setEditClickHandler = (callback) => {

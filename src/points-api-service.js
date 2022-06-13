@@ -45,7 +45,6 @@ export default class PointsApiService extends ApiService {
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
-
     return parsedResponse;
   };
 
@@ -60,10 +59,10 @@ export default class PointsApiService extends ApiService {
 
   #adaptToServer = (point) => {
     const adaptedPoint = {...point,
-      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
-      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
+      'date_from': point.dateFrom,
+      'date_to': point.dateTo,
       'is_favorite': point.isFavorite,
-      'base_price': point.basePrice,
+      'base_price': +point.basePrice,
     };
 
     delete adaptedPoint.dateFrom;

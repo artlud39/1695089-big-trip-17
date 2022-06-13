@@ -1,5 +1,5 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
-import PointEditTemplateView from '../view/point-edit-view.js';
+import PointEditView from '../view/point-edit-view.js';
 import {UserAction, UpdateType, BLANK_POINT} from '../const.js';
 
 export default class PointNewPresenter {
@@ -9,25 +9,20 @@ export default class PointNewPresenter {
   #destroyCallback = null;
 
   #isNewPoint = true;
-  #offersModel = null;
-  #destinationsModel = null;
 
-  constructor(pointListContainer, offersModel, destinationsModel, changeData) {
+  constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
-
-    this.#offersModel = offersModel;
-    this.#destinationsModel = destinationsModel;
   }
 
-  init = (callback) => {
+  init = (callback, allOffers, destinations) => {
     this.#destroyCallback = callback;
 
     if (this.#pointEditComponent !== null) {
       return;
     }
 
-    this.#pointEditComponent = new PointEditTemplateView(BLANK_POINT, this.#offersModel.offers, this.#destinationsModel.destinations, this.#isNewPoint);
+    this.#pointEditComponent = new PointEditView(BLANK_POINT, allOffers, destinations, this.#isNewPoint);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
@@ -56,12 +51,19 @@ export default class PointNewPresenter {
     });
   };
 
+  setAddPoint = () => {
+    this.#pointEditComponent.updateElement({
+      isAddPoint: true,
+    });
+  };
+
   setAborting = () => {
     const resetFormState = () => {
       this.#pointEditComponent.updateElement({
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
+        isAddPoint: false,
       });
     };
 

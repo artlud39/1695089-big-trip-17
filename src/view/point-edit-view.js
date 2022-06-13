@@ -10,20 +10,19 @@ const createPhotosTemplate = (destinationPhotos) => (
   `${destinationPhotos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}`
 );
 
-const createEditOffersTemplate = (offers, pointTypeOffer) => pointTypeOffer
-  .map((offer) => {
-    const checked = offers.includes(offer.id) ? 'checked' : '';
-    const nameID = offer.title.split(' ').slice(-1);
-    return `
+const createEditOffersTemplate = (offersId, pointTypeOffer) => pointTypeOffer.offers.map((offer, index) => {
+  const checked = offersId.includes(offer.id);
+  const nameID = offer.title.split(' ').slice(-1);
+  return `
   <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${nameID}-1" type="checkbox" name="event-offer-${nameID}" ${checked}>
-    <label class="event__offer-label" for="event-offer-${nameID}-1">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${nameID}-${index + 1}" type="checkbox" name="event-offer-${nameID}"  ${checked ? 'checked' : ''} data-offer-id="${offer.id}">
+    <label class="event__offer-label" for="event-offer-${nameID}-${index + 1}">
       <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`;
-  }).join(' ');
+}).join(' ');
 
 const createPointTypes = () => POINT_TYPES.map((type) => (
   `<div class="event__type-item">
@@ -32,11 +31,11 @@ const createPointTypes = () => POINT_TYPES.map((type) => (
     </div>`
 )).join('');
 
-const createOffersSection = (offers, pointTypeOffer) =>  (
+const createOffersSection = (offersId, pointTypeOffer) =>  (
   `<section class="event__section  event__section--offers">
   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   <div class="event__available-offers">
-  ${createEditOffersTemplate(offers, pointTypeOffer)}
+  ${createEditOffersTemplate(offersId, pointTypeOffer)}
   </div>
 </section>`);
 
@@ -71,10 +70,9 @@ const createPointEditTemplate = (point, allOffers, destinations, isNewPoint) => 
   const citiesTemplate = createCitiesTemplate(destinations);
   const pointTypeTemplate = createPointTypes();
 
-  const checkedOffers = offers;
-  const pointTypeOffer = allOffers.find((offer) => offer.type === type).offers;
+  const pointTypeOffer = allOffers.find((offer) => offer.type === type);
+  const offersTemplateSection = pointTypeOffer ? createOffersSection(offers, pointTypeOffer): '';
 
-  const offersTemplateSection = pointTypeOffer.length !== 0 ? createOffersSection(checkedOffers, pointTypeOffer): '';
   const destinationsTemplateSection = destination.pictures.length !== 0 ? createDestinationSection(destination): '';
   const rollupButton = showRollupButton();
 
@@ -137,16 +135,16 @@ const createPointEditTemplate = (point, allOffers, destinations, isNewPoint) => 
 export default class PointEditView extends AbstractStatefulView {
   #dateFromDatepicker = null;
   #dateToDatepicker = null;
-  #offersModel = null;
-  #destinationsModel = null;
+  #allOffers = null;
+  #destinations = null;
   #isNewPoint = null;
 
-  constructor (point = BLANK_POINT, offersModel, destinationsModel, isNewPoint = false) {
+  constructor (point = BLANK_POINT, allOffers, destinations, isNewPoint = false) {
     super();
     this._state = PointEditView.parsePointToState(point);
 
-    this.#destinationsModel = destinationsModel;
-    this.#offersModel = offersModel;
+    this.#allOffers = allOffers;
+    this.#destinations = destinations;
     this.#isNewPoint = isNewPoint;
 
     this.#setInnerHandlers();
@@ -154,7 +152,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createPointEditTemplate(this._state, this.#offersModel, this.#destinationsModel, this.#isNewPoint);
+    return createPointEditTemplate(this._state, this.#allOffers, this.#destinations, this.#isNewPoint);
   }
 
   setEditClickHandler = (callback) => {
@@ -271,7 +269,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #changeCytiHandler = (evt) => {
     evt.preventDefault();
-    const targetPoint = this.#destinationsModel.find((city) => city.name === evt.target.value);
+    const targetPoint = this.#destinations.find((city) => city.name === evt.target.value);
     if (targetPoint) {
       this.updateElement({
         destination: targetPoint,

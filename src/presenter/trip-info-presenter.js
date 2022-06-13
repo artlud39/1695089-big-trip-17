@@ -1,4 +1,4 @@
-import TripInfoTemplateView from '../view/trip-info-view.js';
+import TripInfoView from '../view/trip-info-view.js';
 import {render,RenderPosition} from '../framework/render.js';
 
 export default class TripInfoPresenter {
@@ -20,6 +20,6 @@ export default class TripInfoPresenter {
     if (!this.#headerPoints.length) {
       return;
     }
-    render(new TripInfoTemplateView(this.#headerPoints), this.#listContainer, RenderPosition.AFTERBEGIN);
+    render(new TripInfoView(this.#headerPoints), this.#listContainer, RenderPosition.AFTERBEGIN);
   };
 }

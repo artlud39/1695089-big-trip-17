@@ -5,7 +5,7 @@ const BLANK_POINT = {
   type: 'bus',
   basePrice: '',
   dateFrom: dayjs().toISOString(),
-  dateTo: null,
+  dateTo: dayjs().toISOString(),
   destination: {
     description: '',
     name: '',
