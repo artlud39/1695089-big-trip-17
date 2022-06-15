@@ -295,7 +295,7 @@ export default class PointEditView extends AbstractStatefulView {
   #basePriceHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      basePrice: evt.target.value,
+      basePrice: evt.target.value = evt.target.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'),
     });
   };
 

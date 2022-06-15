@@ -39,7 +39,11 @@ filterPresenter.init();
 boardPresenter.init();
 
 pointsModel.init()
-  .finally(() => {
+  .then(() => {
+    if (pointsModel.offers.length === 0 && pointsModel.destinations.length === 0 && pointsModel.points.length === 0 ) {
+      newPointButtonComponent.element.disabled = true;
+    }
+
     render(newPointButtonComponent, siteTripMainElement);
     newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
   });

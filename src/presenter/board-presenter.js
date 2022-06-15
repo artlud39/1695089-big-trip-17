@@ -8,7 +8,7 @@ import {render, RenderPosition, remove} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import PointPresenter from './point-presenter.js';
 import {sortPointDay, sortPointTime, sortPointPrice} from '../utils/point.js';
-import {filter} from '../utils/filter.js';
+import {filterTypes} from '../utils/filter.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 
 const TimeLimit = {
@@ -48,7 +48,7 @@ export default class BoardPresenter {
   get points () {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = filterTypes[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.DEFAULT:
